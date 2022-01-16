@@ -2,18 +2,30 @@
 //  ViewController.swift
 //  MovieRating
 //
-//  Created by Akib Quraishi on 15/01/2022.
+//  Created by Kamila Lech on 15/01/2022.
 //
 
 import UIKit
 
-class MovieRatingViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class MovieSearchController: UIViewController, UISearchBarDelegate {
   
 private let movieCellIdenifier = "MovieCell"
+    
+   lazy var searchBar : UISearchBar = {
+       let sb = UISearchBar()
+       sb.placeholder = "searchBarPlaceHolder"
+       //sb.barTintColor = .gray
+       sb.keyboardAppearance = .dark
+       //UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = UIColor(red: 230, green: 230, blue: 230, alpha: 1.0)
+       sb.delegate = self
+       sb.autocapitalizationType = .none
+       //sb.barStyle = .black
+       return sb
+    }()
    
     var movies = [MovieResponce]()
     
-   let movieCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    let movieCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
     
 
@@ -28,15 +40,15 @@ private let movieCellIdenifier = "MovieCell"
         movieCollectionView.dataSource = self
         movieCollectionView.backgroundColor = .purple
      
-        view.addSubview(movieCollectionView)
+       
         
-        getMovies(searchTxt: "batman")
+        setUpSearchBar()
         
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        movieCollectionView.frame = view.bounds
+        
     }
     
     
@@ -72,24 +84,43 @@ private let movieCellIdenifier = "MovieCell"
             }
         }
     
+    func setUpSearchBar () {
+        
+        let frame = CGRect(x: 0, y: 40, width: view.frame.width, height: 44)
+        let seachBarContainerView = UIView(frame: frame)
+        seachBarContainerView.backgroundColor = .clear
+        
+        searchBar.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 44)
+        seachBarContainerView.addSubview(searchBar)
+        view.addSubview(seachBarContainerView)
+        
+        movieCollectionView.frame = CGRect(x: 0, y: 84, width: view.frame.width, height: view.frame.height - 84)
+        view.addSubview(movieCollectionView)
+        
+    }
     
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if let searchText = searchBar.text {
+        getMovies(searchTxt: "Hell")
+        }
+    }
     
 }
 
 
-extension MovieRatingViewController {
+extension MovieSearchController : UICollectionViewDelegate, UICollectionViewDataSource {
     
      func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-         return movies.count
+         return 8 //movies.count
     }
     
      func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: movieCellIdenifier, for: indexPath) as! MovieCell
          cell.backgroundColor = .blue
          
-         let selectedMovie = movies[indexPath.item]
-         cell.movieDetails = selectedMovie
-       
+         //let selectedMovie = movies[indexPath.item]
+         //cell.movieDetails = selectedMovie
+         
         return cell
     }
     
@@ -103,7 +134,7 @@ extension MovieRatingViewController {
     
 }
 
-extension MovieRatingViewController : UICollectionViewDelegateFlowLayout {
+extension MovieSearchController : UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 10, left: 5, bottom: 10, right: 5)
@@ -111,7 +142,7 @@ extension MovieRatingViewController : UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let collectionViewWidth = (collectionView.bounds.width - 20)/2
-        return CGSize(width: collectionViewWidth, height: 180)
+        return CGSize(width: collectionViewWidth, height: 300)
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {

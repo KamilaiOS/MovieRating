@@ -2,7 +2,7 @@
 //  MovieResponce.swift
 //  MovieRating
 //
-//  Created by Akib Quraishi on 15/01/2022.
+//  Created by Kamila Lech on 15/01/2022.
 //
 
 import Foundation
